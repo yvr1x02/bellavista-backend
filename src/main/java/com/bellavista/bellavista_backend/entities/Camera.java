@@ -1,4 +1,4 @@
-package entities;
+package com.bellavista.bellavista_backend.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;

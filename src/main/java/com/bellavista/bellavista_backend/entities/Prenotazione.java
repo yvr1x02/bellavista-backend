@@ -1,6 +1,5 @@
-package entities;
+package com.bellavista.bellavista_backend.entities;
 
-import entities.Ospite;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;

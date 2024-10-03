@@ -1,4 +1,4 @@
-package entities;
+package com.bellavista.bellavista_backend.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import java.util.UUID;
 public class Ospite {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private UUID id;
 
 
