@@ -34,4 +34,12 @@ public class Ospite {
     private List<Prenotazione> prenotazioni;
 
 
+    public Ospite(UUID id, String nome, String cognome, String email, String telefono, List<Prenotazione> prenotazioni) {
+        this.id = id;
+        this.nome = nome;
+        this.cognome = cognome;
+        this.email = email;
+        this.telefono = telefono;
+        this.prenotazioni = prenotazioni;
+    }
 }

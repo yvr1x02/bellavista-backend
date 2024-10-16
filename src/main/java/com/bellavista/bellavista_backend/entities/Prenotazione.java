@@ -6,8 +6,8 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 @Entity
 @Table(name = "prenotazioni")
 public class Prenotazione {
@@ -17,12 +17,8 @@ public class Prenotazione {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "ospite_id")
+    @JoinColumn(name = "ospite_id", nullable = false)
     private Ospite ospite;
-
-    @ManyToOne
-    @JoinColumn(name = "camera_id")
-    private Camera camera;
 
     @Column(name = "data_inizio")
     private LocalDate dataInizio;
@@ -33,12 +29,6 @@ public class Prenotazione {
     @Column(name = "confermata")
     private boolean confermata;
 
-    public Prenotazione(UUID id, Ospite ospite, LocalDate dataInizio, LocalDate dataFine, boolean confermata) {
-        this.id = id;
-        this.ospite = ospite;
-        this.dataInizio = dataInizio;
-        this.dataFine = dataFine;
-        this.confermata = confermata;
-    }
-
+    @Column(name = "note")
+    private String note;
 }
