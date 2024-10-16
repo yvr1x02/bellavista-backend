@@ -3,11 +3,14 @@ package com.bellavista.bellavista_backend.services;
 import com.bellavista.bellavista_backend.entities.Ospite;
 import com.bellavista.bellavista_backend.repository.OspiteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+
+@Service
 public class OspiteService {
 
 
