@@ -37,13 +37,26 @@ public class OspiteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Ospite> updateOspite(@PathVariable UUID id, @RequestBody Ospite ospite) {
-        if (ospiteService.findById(id).isEmpty()) {
+    public ResponseEntity<Ospite> updateOspite(@PathVariable UUID id, @RequestBody Ospite updatedOspite) {
+        Optional<Ospite> ospiteOptional = ospiteService.findById(id);
+
+        if (ospiteOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        ospite.setId(id);
-        return ResponseEntity.ok(ospiteService.save(ospite));
+
+        Ospite existingOspite = ospiteOptional.get();
+
+        updatedOspite.setPrenotazioni(existingOspite.getPrenotazioni());
+
+        existingOspite.setNome(updatedOspite.getNome());
+        existingOspite.setCognome(updatedOspite.getCognome());
+        existingOspite.setEmail(updatedOspite.getEmail());
+        existingOspite.setTelefono(updatedOspite.getTelefono());
+
+        Ospite savedOspite = ospiteService.save(existingOspite);
+        return ResponseEntity.ok(savedOspite);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOspite(@PathVariable UUID id) {
