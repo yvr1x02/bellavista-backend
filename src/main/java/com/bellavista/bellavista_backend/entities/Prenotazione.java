@@ -1,6 +1,5 @@
 package com.bellavista.bellavista_backend.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +17,8 @@ public class Prenotazione {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @JsonBackReference
+
+    @ManyToOne
     @JoinColumn(name = "ospite_id", nullable = false)
     private Ospite ospite;
 
@@ -34,7 +34,10 @@ public class Prenotazione {
     @Column(name = "note")
     private String note;
 
-    public Prenotazione() {}
+
+    public Prenotazione() {
+    }
+
 
     public Prenotazione(UUID id, Ospite ospite, LocalDate dataInizio, LocalDate dataFine, boolean confermata, String note) {
         this.id = id;

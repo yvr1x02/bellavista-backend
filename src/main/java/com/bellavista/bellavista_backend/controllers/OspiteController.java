@@ -1,62 +1,105 @@
 package com.bellavista.bellavista_backend.controllers;
 
 
+import com.bellavista.bellavista_backend.dto.OspiteDTO;
 import com.bellavista.bellavista_backend.entities.Ospite;
 import com.bellavista.bellavista_backend.services.OspiteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api/ospiti")
-
 public class OspiteController {
-
 
     @Autowired
     private OspiteService ospiteService;
 
     @GetMapping
-    public List<Ospite> getAllOspiti(){
-        return ospiteService.findAll();
+    public List<OspiteDTO> getAllOspiti() {
+        List<Ospite> ospiti = ospiteService.findAll();
+        return ospiti.stream()
+                .map(ospite -> new OspiteDTO(
+                        ospite.getId(),
+                        ospite.getNome(),
+                        ospite.getCognome(),
+                        ospite.getEmail(),
+                        ospite.getTelefono()
+                ))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Ospite> getOspiteById(@PathVariable UUID id) {
-        Optional<Ospite> ospite = ospiteService.findById(id);
-        return ospite.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<OspiteDTO> getOspiteById(@PathVariable UUID id) {
+        Optional<Ospite> ospiteOptional = ospiteService.findById(id);
+        if (ospiteOptional.isPresent()) {
+            Ospite ospite = ospiteOptional.get();
+            OspiteDTO ospiteDTO = new OspiteDTO(
+                    ospite.getId(),
+                    ospite.getNome(),
+                    ospite.getCognome(),
+                    ospite.getEmail(),
+                    ospite.getTelefono()
+            );
+            return ResponseEntity.ok(ospiteDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
-    public Ospite createOspite(@RequestBody Ospite ospite) {
-        return ospiteService.save(ospite);
+    public ResponseEntity<OspiteDTO> createOspite(@RequestBody OspiteDTO ospiteDTO) {
+        Ospite ospite = new Ospite();
+        ospite.setNome(ospiteDTO.getNome());
+        ospite.setCognome(ospiteDTO.getCognome());
+        ospite.setEmail(ospiteDTO.getEmail());
+        ospite.setTelefono(ospiteDTO.getTelefono());
+
+        Ospite savedOspite = ospiteService.save(ospite);
+
+        OspiteDTO savedOspiteDTO = new OspiteDTO(
+                savedOspite.getId(),
+                savedOspite.getNome(),
+                savedOspite.getCognome(),
+                savedOspite.getEmail(),
+                savedOspite.getTelefono()
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedOspiteDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Ospite> updateOspite(@PathVariable UUID id, @RequestBody Ospite updatedOspite) {
+    public ResponseEntity<OspiteDTO> updateOspite(@PathVariable UUID id, @RequestBody OspiteDTO ospiteDTO) {
         Optional<Ospite> ospiteOptional = ospiteService.findById(id);
-
         if (ospiteOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        Ospite existingOspite = ospiteOptional.get();
+        Ospite ospite = ospiteOptional.get();
+        ospite.setNome(ospiteDTO.getNome());
+        ospite.setCognome(ospiteDTO.getCognome());
+        ospite.setEmail(ospiteDTO.getEmail());
+        ospite.setTelefono(ospiteDTO.getTelefono());
 
-        updatedOspite.setPrenotazioni(existingOspite.getPrenotazioni());
+        Ospite updatedOspite = ospiteService.save(ospite);
 
-        existingOspite.setNome(updatedOspite.getNome());
-        existingOspite.setCognome(updatedOspite.getCognome());
-        existingOspite.setEmail(updatedOspite.getEmail());
-        existingOspite.setTelefono(updatedOspite.getTelefono());
+        OspiteDTO updatedOspiteDTO = new OspiteDTO(
+                updatedOspite.getId(),
+                updatedOspite.getNome(),
+                updatedOspite.getCognome(),
+                updatedOspite.getEmail(),
+                updatedOspite.getTelefono()
+        );
 
-        Ospite savedOspite = ospiteService.save(existingOspite);
-        return ResponseEntity.ok(savedOspite);
+        return ResponseEntity.ok(updatedOspiteDTO);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOspite(@PathVariable UUID id) {
@@ -66,11 +109,5 @@ public class OspiteController {
         ospiteService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
-
-
-
-
-
-
 }
+
