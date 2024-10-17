@@ -35,8 +35,11 @@ public class PrenotazioneServices {
         return prenotazioneRepository.save(prenotazione);
    }
 
+    //delete
+    public void delete(UUID id){
+        prenotazioneRepository.deleteById(id);
+    }
 
-   public
 
 
 

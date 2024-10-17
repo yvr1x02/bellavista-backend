@@ -17,7 +17,7 @@ public class Ospite {
     @GeneratedValue
     private UUID id;
 
-
+    
     @Column(name = "nome")
     private String nome;
 
