@@ -20,7 +20,7 @@ public class User {
     private String password;
 
 
-    private String ruolo;
+    private String role;
 
     @OneToMany(mappedBy = "user")
     private Ospite ospite;
