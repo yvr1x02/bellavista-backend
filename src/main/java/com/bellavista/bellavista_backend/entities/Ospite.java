@@ -30,6 +30,12 @@ public class Ospite {
     @Column(name = "telefono")
     private String telefono;
 
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
+
     @OneToMany(mappedBy = "ospite", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Prenotazione> prenotazioni;
 
