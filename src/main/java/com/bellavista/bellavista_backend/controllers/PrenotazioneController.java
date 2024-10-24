@@ -7,6 +7,7 @@ import com.bellavista.bellavista_backend.entities.Ospite;
 import com.bellavista.bellavista_backend.entities.Prenotazione;
 import com.bellavista.bellavista_backend.services.PrenotazioneServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -107,7 +108,7 @@ public class PrenotazioneController {
     @PutMapping("/{id}")
     public ResponseEntity<PrenotazioneDTO> updatePrenotazione(@PathVariable UUID id, @RequestBody PrenotazioneDTO prenotazioneDTO) {
         Optional<Prenotazione> prenotazioneOptional = prenotazioneService.findById(id);
-        if (!prenotazioneOptional.isPresent()) {
+        if (prenotazioneOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -137,13 +138,38 @@ public class PrenotazioneController {
         return ResponseEntity.ok(updatedPrenotazioneDTO);
     }
 
-    @DeleteMapping("/{id}")
+
+    @PutMapping("{id}/conferma")
+    public ResponseEntity<PrenotazioneDTO> confermaPrenotazione(@PathVariable UUID id) {
+        Prenotazione prenotazione = prenotazioneService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Prenotazione non trovata"));
+
+        prenotazione.setConfermata(true); // Imposta confermata su true
+        Prenotazione updatedPrenotazione = prenotazioneService.save(prenotazione);
+
+        PrenotazioneDTO updatedPrenotazioneDTO = new PrenotazioneDTO(
+                updatedPrenotazione.getId(),
+                new OspiteDTO(updatedPrenotazione.getOspite().getId(), updatedPrenotazione.getOspite().getNome(), updatedPrenotazione.getOspite().getCognome(), updatedPrenotazione.getOspite().getEmail(), updatedPrenotazione.getOspite().getTelefono()),
+                updatedPrenotazione.getDataInizio(),
+                updatedPrenotazione.getDataFine(),
+                updatedPrenotazione.getNote(),
+                updatedPrenotazione.isConfermata()
+        );
+
+        return ResponseEntity.ok(updatedPrenotazioneDTO);
+    }
+
+
+
+
+    @DeleteMapping("{id}")
     public ResponseEntity<Void> deletePrenotazione(@PathVariable UUID id) {
-        if (!prenotazioneService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        prenotazioneService.delete(id);
+        Prenotazione prenotazione = prenotazioneService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Prenotazione non trovata"));
+
+        prenotazioneService.delete(prenotazione.getId());
         return ResponseEntity.noContent().build();
     }
+
 }
 

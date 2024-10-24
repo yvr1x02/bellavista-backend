@@ -31,4 +31,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleInvalidDataException(InvalidDataException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+
+
 }

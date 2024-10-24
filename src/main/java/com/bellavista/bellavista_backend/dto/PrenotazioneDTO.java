@@ -6,11 +6,11 @@ import java.util.UUID;
 public class PrenotazioneDTO {
 
     private UUID id;
+    private OspiteDTO ospite;
     private LocalDate dataInizio;
     private LocalDate dataFine;
     private boolean confermata;
     private String note;
-    private OspiteDTO ospite;
 
 
 
@@ -23,6 +23,9 @@ public class PrenotazioneDTO {
         this.confermata = confermata;
         this.note = note;
         this.ospite = ospite;
+    }
+
+    public PrenotazioneDTO(UUID id, OspiteDTO ospiteDTO, LocalDate dataInizio, LocalDate dataFine, String note, boolean confermata) {
     }
 
     public UUID getId() {

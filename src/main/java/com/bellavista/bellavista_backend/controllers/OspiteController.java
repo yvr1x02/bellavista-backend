@@ -56,6 +56,8 @@ public class OspiteController {
 
     @PostMapping
     public ResponseEntity<OspiteDTO> createOspite(@RequestBody OspiteDTO ospiteDTO) {
+        System.out.println("Richiesta di creazione ospite ricevuta: " + ospiteDTO.getNome());
+
         Ospite ospite = new Ospite();
         ospite.setNome(ospiteDTO.getNome());
         ospite.setCognome(ospiteDTO.getCognome());
@@ -74,6 +76,7 @@ public class OspiteController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedOspiteDTO);
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<OspiteDTO> updateOspite(@PathVariable UUID id, @RequestBody OspiteDTO ospiteDTO) {
